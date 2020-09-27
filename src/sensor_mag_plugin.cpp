@@ -41,7 +41,7 @@
 
 #include "sensor_mag_plugin.h"
 
-// // Initialize sensor bias with zeros.
+// Initialize sensor bias with zeros.
 std::vector<double> bias(3);
 
 static constexpr auto kDefaultPubRate = 100.0;  // [Hz]. Note: corresponds to most of the mag devices supported in PX4
