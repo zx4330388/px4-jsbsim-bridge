@@ -74,8 +74,6 @@ class SensorImuPlugin : public SensorPlugin {
   /// Norm of the gravitational acceleration [m/s^2]
   double gravity_magnitude;
 
-  Eigen::Vector3d _gyroscope_bias;
-  Eigen::Vector3d _accelerometer_bias;
 
   Eigen::Vector3d _gyroscope_turn_on_bias;
   Eigen::Vector3d _accelerometer_turn_on_bias;

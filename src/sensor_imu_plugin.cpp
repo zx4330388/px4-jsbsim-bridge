@@ -41,6 +41,10 @@
 
 #include "sensor_imu_plugin.h"
 
+// Initialize sensor bias with zeros.
+std::vector<double> accelerometer_bias(3);
+std::vector<double> gyroscope_bias(3);
+
 // Default values for use with ADIS16448 IMU
 static constexpr double kDefaultAdisGyroscopeNoiseDensity = 2.0 * 35.0 / 3600.0 / 180.0 * M_PI;
 static constexpr double kDefaultAdisGyroscopeRandomWalk = 2.0 * 4.0 / 3600.0 / 180.0 * M_PI;
@@ -125,8 +129,8 @@ void SensorImuPlugin::addNoise(Eigen::Vector3d* linear_acceleration, Eigen::Vect
   double phi_g_d = exp(-1.0 / tau_g * dt);
   // Simulate gyroscope noise processes and add them to the true angular rate.
   for (int i = 0; i < 3; ++i) {
-    _gyroscope_bias[i] = phi_g_d * _gyroscope_bias[i] + sigma_b_g_d * _standard_normal_distribution(_random_generator);
-    (*angular_velocity)[i] = (*angular_velocity)[i] + _gyroscope_bias[i] +
+    gyroscope_bias[i] = phi_g_d * gyroscope_bias[i] + sigma_b_g_d * _standard_normal_distribution(_random_generator);
+    (*angular_velocity)[i] = (*angular_velocity)[i] + gyroscope_bias[i] +
                              sigma_g_d * _standard_normal_distribution(_random_generator) + _gyroscope_turn_on_bias[i];
   }
 
@@ -143,9 +147,9 @@ void SensorImuPlugin::addNoise(Eigen::Vector3d* linear_acceleration, Eigen::Vect
   // Simulate accelerometer noise processes and add them to the true linear
   // acceleration.
   for (int i = 0; i < 3; ++i) {
-    _accelerometer_bias[i] =
-        phi_a_d * _accelerometer_bias[i] + sigma_b_a_d * _standard_normal_distribution(_random_generator);
-    (*linear_acceleration)[i] = (*linear_acceleration)[i] + _accelerometer_bias[i] +
+    accelerometer_bias[i] =
+        phi_a_d * accelerometer_bias[i] + sigma_b_a_d *_standard_normal_distribution(_random_generator);
+    (*linear_acceleration)[i] = (*linear_acceleration)[i] + accelerometer_bias[i] +
                                 sigma_a_d * _standard_normal_distribution(_random_generator) +
                                 _accelerometer_turn_on_bias[i];
   }

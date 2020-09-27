@@ -41,6 +41,9 @@
 
 #include "sensor_mag_plugin.h"
 
+// // Initialize sensor bias with zeros.
+std::vector<double> bias(3);
+
 static constexpr auto kDefaultPubRate = 100.0;  // [Hz]. Note: corresponds to most of the mag devices supported in PX4
 
 // Default values for use with ADIS16448 IMU
@@ -124,7 +127,7 @@ void SensorMagPlugin::addNoise(Eigen::Vector3d* magnetic_field, const double dt)
   double phi_d = exp(-1.0 / tau * dt);
   // Simulate magnetometer noise processes and add them to the true signal.
   for (int i = 0; i < 3; ++i) {
-    _bias[i] = phi_d * _bias[i] + sigma_b_d * _standard_normal_distribution(_random_generator);
-    (*magnetic_field)[i] = (*magnetic_field)[i] + _bias[i] + sigma_d * _standard_normal_distribution(_random_generator);
+    bias[i] = phi_d * bias[i] + sigma_b_d * _standard_normal_distribution(_random_generator);
+    (*magnetic_field)[i] = (*magnetic_field)[i] + bias[i] + sigma_d * _standard_normal_distribution(_random_generator);
   }
 }
