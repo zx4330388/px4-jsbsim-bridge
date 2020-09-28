@@ -51,6 +51,7 @@
 
 #include <FGFDMExec.h>
 #include <initialization/FGInitialCondition.h>
+#include <input_output/FGScript.h>
 
 #include <tinyxml.h>
 #include <chrono>
