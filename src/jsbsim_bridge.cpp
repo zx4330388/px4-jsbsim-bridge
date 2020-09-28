@@ -71,7 +71,9 @@ JSBSimBridge::JSBSimBridge(JSBSim::FGFDMExec *fdmexec, std::string &path)
 
   if (CheckConfigElement(config, "sensors", "gps")) {
     _gps_sensor = std::make_unique<SensorGpsPlugin>(_fdmexec);
-    _gps_sensor->setUpdateRate(1.0);
+    _gps_sensor->setUpdateRate(5.0);
+    //TODO read GPS update rate from XML
+    //TODO check less than 250Hz for lockstep
   }
 
   if (CheckConfigElement(config, "sensors", "barometer")) {
@@ -148,7 +150,7 @@ void JSBSimBridge::Run() {
   }
 
   // Send Mavlink HIL_GPS message
-  if (_gps_sensor && _gps_sensor->updated()) {
+  if (_gps_sensor && _gps_sensor->updatedGPS()) {
     _mavlink_interface->SendGpsMessages(_gps_sensor->getData());
   }
 

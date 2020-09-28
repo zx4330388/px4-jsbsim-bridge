@@ -62,6 +62,4 @@ class SensorMagPlugin : public SensorPlugin {
   double _bias_correlation_time;
 
   Eigen::Vector3d _bias;
-
-  double _last_sim_time;
 };

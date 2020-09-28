@@ -52,6 +52,8 @@ class SensorPlugin {
   ~SensorPlugin();
   void setUpdateRate(double update_rate);
   bool updated();
+  bool updatedGPS();
+  double _last_gps_sim_time;
 
  protected:
   JSBSim::FGFDMExec *_sim_ptr;

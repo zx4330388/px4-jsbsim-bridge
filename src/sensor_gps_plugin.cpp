@@ -41,19 +41,21 @@
 
 #include "sensor_gps_plugin.h"
 
-SensorGpsPlugin::SensorGpsPlugin(JSBSim::FGFDMExec *jsbsim) : SensorPlugin(jsbsim) { _update_rate = 1.0; }
+SensorGpsPlugin::SensorGpsPlugin(JSBSim::FGFDMExec *jsbsim) : SensorPlugin(jsbsim) { _update_rate = 5.0; }
+//TODO read update rate from XML
+//TODO check 250Hz for lockstep
 
 SensorGpsPlugin::~SensorGpsPlugin() {}
 
 SensorData::Gps SensorGpsPlugin::getData() {
-  double sim_time = _sim_ptr->GetSimTime();
-  double dt = sim_time - _last_sim_time;
+  double gps_sim_time = _sim_ptr->GetSimTime();
+  double gps_dt = gps_sim_time - _last_gps_sim_time;
 
   SensorData::Gps data;
 
   data = getGpsFromJSBSim();
 
-  _last_sim_time = sim_time;
+  _last_gps_sim_time = gps_sim_time;
   return data;
 }
 

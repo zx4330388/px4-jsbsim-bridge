@@ -56,3 +56,13 @@ bool SensorPlugin::updated() {
   }
   return false;
 }
+
+bool SensorPlugin::updatedGPS() {
+  double gps_sim_time = _sim_ptr->GetSimTime();
+  double gps_dt = gps_sim_time - _last_gps_sim_time;
+
+  if (gps_dt > (1 / _update_rate) || _update_rate == 0) {
+    return true;
+  }
+  return false;
+}
