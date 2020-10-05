@@ -42,13 +42,11 @@
 #include "jsbsim_bridge.h"
 
 int main(int argc, char *argv[]) {
-  if (argc < 5) {
+  if (argc < 4) {
     cout << "This is a JSBSim integration for PX4 SITL/HITL simulations" << std::endl;
-    cout << "   Usage: " << argv[0] << "<aircraft_path> <aircraft> <config> <scenario> <headless>" << endl;
+    cout << "   Usage: " << argv[0] << "<aircraft_path> <config> <scenario> <headless>" << endl;
     cout << "       <aircraft_path>: Aircraft directory path which the <aircraft> definition is located e.g. "
-            "`models/Rascal`"
-         << endl;
-    cout << "       <aircraft>: Aircraft file to use inside the <aircraft_path> e.g. Rascal110-JSBSim" << endl;
+            "`models/Rascal`" << endl;
     cout << "       <config>: Simulation config file name under the `configs` directory e.g. rascal" << endl;
     cout << "       <scenario>: Location / JSBSim script describing simulation environment" << endl;
     cout << "       <headless>: Headless option for flightgear visualiztion 1: enable 0: disable" << endl;
@@ -58,25 +56,19 @@ int main(int argc, char *argv[]) {
   // Configure JSBSim
   JSBSim::FGFDMExec *fdmexec = new JSBSim::FGFDMExec();
   fdmexec->SetRootDir(SGPath(JSBSIM_ROOT_DIR));
-  std::cout << "ROOT " << SGPath(JSBSIM_ROOT_DIR) << std::endl;
-
-  // Define JSBSim airframe, engines, and systems path
-  fdmexec->SetAircraftPath(SGPath("models/"));
+  fdmexec->SetAircraftPath(SGPath(SGPath::fromLocal8Bit(argv[1])));
   fdmexec->SetEnginePath(SGPath("Engines"));
   fdmexec->SetSystemsPath(SGPath("Systems"));
-
-  // Configure JSBSim script setup
-  std::string script_path = std::string(std::string(argv[4]));
-  fdmexec->LoadScript(SGPath(script_path));
+  fdmexec->LoadScript(SGPath(std::string(std::string(argv[3]))));
 
   // Configure FlightGear Output
-  bool headless = (argv[5] == "1");  // Check if HEADLESS mode is enabled
+  bool headless = (argv[4] == "1");  // Check if HEADLESS mode is enabled
   if (!headless) {
     fdmexec->SetOutputDirectives(SGPath("data_out/flightgear.xml"));
   }
 
   // Path to config file
-  std::string path = std::string(JSBSIM_ROOT_DIR) + "/configs/" + std::string(argv[3]) + ".xml";
+  std::string path = std::string(JSBSIM_ROOT_DIR) + "/configs/" + std::string(argv[2]) + ".xml";
 
   // Configure JSBSim execution.
   std::unique_ptr<JSBSimBridge> jsbsim_bridge = std::make_unique<JSBSimBridge>(fdmexec, path);
