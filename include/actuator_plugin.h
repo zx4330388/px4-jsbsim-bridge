@@ -42,7 +42,7 @@
 #pragma once
 
 #include "common.h"
-
+#include <string>
 #include <FGFDMExec.h>
 #include <tinyxml.h>
 #include <Eigen/Eigen>
@@ -50,7 +50,7 @@
 struct ActuatorMap {
   size_t index;
   double scale;
-  string property;
+  std::string property;
 };
 
 class ActuatorPlugin {
